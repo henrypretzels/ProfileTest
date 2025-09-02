@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ProfileTest</string>
+    <string-array name="temas_array">
+        <item>Claro</item>
+        <item>Escuro</item>
+    </string-array>
 </resources>
