@@ -13,16 +13,14 @@ import androidx.appcompat.app.AppCompatActivity
 class ResumoActivity : AppCompatActivity() {
 
     private val TAG = "ResumoActivityLifecycle"
-    private val PREFS_NAME = "UserProfilePrefs" // Nome do arquivo SharedPreferences
+    private val PREFS_NAME = "UserProfilePrefs"
 
-    // Chaves para SharedPreferences
     private val KEY_NOME = "nomeCompleto"
     private val KEY_EMAIL = "email"
     private val KEY_RUA = "rua"
     private val KEY_CIDADE = "cidade"
     private val KEY_NEWSLETTER = "recebeNewsletter"
     private val KEY_TEMA = "temaApp"
-
 
     private lateinit var textViewValorNomeCompleto: TextView
     private lateinit var textViewValorEmail: TextView
@@ -33,14 +31,12 @@ class ResumoActivity : AppCompatActivity() {
     private lateinit var buttonEditarPerfil: Button
     private lateinit var buttonFinalizarResumo: Button
 
-    // Variáveis para armazenar os dados recebidos
     private var nomeCompleto: String? = null
     private var email: String? = null
     private var rua: String? = null
     private var cidade: String? = null
     private var recebeNewsletter: Boolean = false
     private var temaApp: String? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,33 +54,36 @@ class ResumoActivity : AppCompatActivity() {
         buttonFinalizarResumo = findViewById(R.id.buttonFinalizarResumo)
 
         // Receber dados da PreferenciasActivity
-        nomeCompleto = intent.getStringExtra("NOME_COMPLETO")
-        email = intent.getStringExtra("EMAIL")
-        rua = intent.getStringExtra("RUA")
-        cidade = intent.getStringExtra("CIDADE")
-        recebeNewsletter = intent.getBooleanExtra("RECEBE_NEWSLETTER", false)
-        temaApp = intent.getStringExtra("TEMA_APP")
+        nomeCompleto = intent.getStringExtra(KEY_NOME) // Usar as constantes KEY_ aqui também é uma boa prática
+        email = intent.getStringExtra(KEY_EMAIL)
+        rua = intent.getStringExtra(KEY_RUA)
+        cidade = intent.getStringExtra(KEY_CIDADE)
+        recebeNewsletter = intent.getBooleanExtra(KEY_NEWSLETTER, false)
+        temaApp = intent.getStringExtra(KEY_TEMA)
 
-        // Exibir dados recebidos
+        // Log para verificar os dados recebidos ANTES de exibi-los
+        Log.d(TAG, "DADOS RECEBIDOS NA RESUMO (do Intent):")
+        Log.d(TAG, "Nome: $nomeCompleto")
+        Log.d(TAG, "Email: $email")
+        Log.d(TAG, "Rua: $rua")
+        Log.d(TAG, "Cidade: $cidade")
+        Log.d(TAG, "Newsletter: $recebeNewsletter")
+        Log.d(TAG, "Tema: $temaApp")
+
+        // Exibir dados recebidos SOMENTE DEPOIS de carregá-los
         exibirDados()
 
-
         buttonEditarPerfil.setOnClickListener {
-            // Voltar para PerfilActivity, limpando as Activities intermediárias da pilha
             val intent = Intent(this, PerfilActivity::class.java).apply {
-                // Passar os dados atuais de volta para pré-preenchimento, se desejar
-                // ou simplesmente limpar e começar de novo
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             startActivity(intent)
-            finish() // Finaliza a ResumoActivity
+            finish()
         }
 
         buttonFinalizarResumo.setOnClickListener {
             salvarDadosSharedPreferences()
             Toast.makeText(this, "Salvo com sucesso!", Toast.LENGTH_LONG).show()
-            // Opcionalmente, você pode querer fechar o app ou ir para uma tela inicial
-            // finishAffinity() // Fecha todas as activities do app
         }
     }
 
@@ -95,7 +94,7 @@ class ResumoActivity : AppCompatActivity() {
         textViewValorCidade.text = cidade ?: "Não informado"
         textViewValorNewsletter.text = if (recebeNewsletter) "Sim" else "Não"
         textViewValorTemaApp.text = temaApp ?: "Não informado"
-        Log.d(TAG, "Dados exibidos no resumo")
+        Log.d(TAG, "Dados exibidos no resumo (após atribuição aos TextViews)")
     }
 
     private fun salvarDadosSharedPreferences() {
@@ -109,40 +108,9 @@ class ResumoActivity : AppCompatActivity() {
         editor.putBoolean(KEY_NEWSLETTER, recebeNewsletter)
         editor.putString(KEY_TEMA, temaApp)
 
-        editor.apply() // Salva de forma assíncrona
+        editor.apply()
         Log.d(TAG, "Dados salvos no SharedPreferences")
     }
 
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart: Activity Visível")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume: Activity Interativa")
-        // Os dados já foram carregados via Intent em onCreate neste caso.
-        // Se viesse de um estado salvo (sem Intent), carregaria aqui.
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause: Activity Pausada")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop: Activity Não Visível")
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        Log.d(TAG, "onRestart: Activity Reiniciada")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy: Activity Destruída")
-    }
 }
+
