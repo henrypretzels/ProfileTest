@@ -34,22 +34,17 @@ class EnderecoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_endereco)
         Log.d(TAG, "onCreate: Activity Criada")
 
-        // Initialize SharedPreferences
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-        // Receive data from PerfilActivity via Intent (this takes precedence)
-        // Correctly receives data from the previous Activity, as shown by your logs.
         nomeCompleto = intent.getStringExtra("NOME_COMPLETO")
         email = intent.getStringExtra("EMAIL")
         Log.d(TAG, "Dados recebidos via Intent: Nome=$nomeCompleto, Email=$email")
 
-        // Initialize Views
         editTextRua = findViewById(R.id.editTextRua)
         editTextCidade = findViewById(R.id.editTextCidade)
         buttonVoltarEndereco = findViewById(R.id.buttonVoltarEndereco)
         buttonProximoEndereco = findViewById(R.id.buttonProximoEndereco)
 
-        // Load any previously saved address data from SharedPreferences
         carregarDadosSalvos()
 
         buttonVoltarEndereco.setOnClickListener {
@@ -60,13 +55,10 @@ class EnderecoActivity : AppCompatActivity() {
             val rua = editTextRua.text.toString()
             val cidade = editTextCidade.text.toString()
 
-            // Save all data (including name and email from the previous screen)
-            // This is a robust approach to prevent data loss.
+
             salvarTodosDadosTemporarios(nomeCompleto, email, rua, cidade)
 
             val nextIntent = Intent(this, PreferenciasActivity::class.java).apply {
-                // Now, pass the variables. Since they are now stored in SharedPreferences
-                // as a backup, this is a safer approach.
                 putExtra(KEY_NOME, nomeCompleto)
                 putExtra(KEY_EMAIL, email)
                 putExtra(KEY_RUA, rua)
@@ -93,7 +85,6 @@ class EnderecoActivity : AppCompatActivity() {
         val ruaAtual = editTextRua.text.toString()
         val cidadeAtual = editTextCidade.text.toString()
         if (ruaAtual.isNotBlank() || cidadeAtual.isNotBlank()) {
-            // This saves only the address.
             salvarDadosTemporarios(ruaAtual, cidadeAtual)
         }
     }
@@ -114,7 +105,6 @@ class EnderecoActivity : AppCompatActivity() {
     }
 
     private fun carregarDadosSalvos() {
-        // Load address data to pre-fill the form
         val ruaSalva = sharedPreferences.getString(KEY_RUA, null)
         val cidadeSalva = sharedPreferences.getString(KEY_CIDADE, null)
 
@@ -126,7 +116,6 @@ class EnderecoActivity : AppCompatActivity() {
         }
         Log.d(TAG, "Dados carregados SharedPreferences: Rua=$ruaSalva, Cidade=$cidadeSalva")
 
-        // Load name and email in case the activity was started without an Intent
         if (nomeCompleto == null) nomeCompleto = sharedPreferences.getString(KEY_NOME, null)
         if (email == null) email = sharedPreferences.getString(KEY_EMAIL, null)
     }
@@ -141,7 +130,6 @@ class EnderecoActivity : AppCompatActivity() {
 
     private fun salvarTodosDadosTemporarios(nome: String?, email: String?, rua: String, cidade: String) {
         val editor = sharedPreferences.edit()
-        // Save all previous and current data
         nome?.let { editor.putString(KEY_NOME, it) }
         email?.let { editor.putString(KEY_EMAIL, it) }
         editor.putString(KEY_RUA, rua)

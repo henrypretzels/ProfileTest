@@ -41,11 +41,9 @@ class PreferenciasActivity : AppCompatActivity() {
         setContentView(R.layout.activity_preferencias)
         Log.d(TAG, "onCreate: Activity Criada")
 
-        // Initialize SharedPreferences and resources
         sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         temasArray = resources.getStringArray(R.array.temas_array)
 
-        // Receive data from EnderecoActivity via Intent
         nomeCompleto = intent.getStringExtra(KEY_NOME)
         email = intent.getStringExtra(KEY_EMAIL)
         rua = intent.getStringExtra(KEY_RUA)
@@ -53,13 +51,11 @@ class PreferenciasActivity : AppCompatActivity() {
 
         Log.d(TAG, "Dados recebidos via Intent: Nome=$nomeCompleto, Email=$email, Rua=$rua, Cidade=$cidade")
 
-        // Initialize Views
         switchNewsletter = findViewById(R.id.switchNewsletter)
         spinnerTema = findViewById(R.id.spinnerTema)
         buttonVoltarPreferencias = findViewById(R.id.buttonVoltarPreferencias)
         buttonProximoPreferencias = findViewById(R.id.buttonProximoPreferencias)
 
-        // Configure the Spinner
         ArrayAdapter.createFromResource(
             this,
             R.array.temas_array,
@@ -69,18 +65,16 @@ class PreferenciasActivity : AppCompatActivity() {
             spinnerTema.adapter = adapter
         }
 
-        // Load any previously saved data from SharedPreferences
         carregarDadosSalvos()
 
         buttonVoltarPreferencias.setOnClickListener {
-            finish() // Navigates back to the previous Activity
+            finish()
         }
 
         buttonProximoPreferencias.setOnClickListener {
             val recebeNewsletter = switchNewsletter.isChecked
             val temaSelecionado = spinnerTema.selectedItem.toString()
 
-            // Save the current preferences
             salvarDadosTemporarios(recebeNewsletter, temaSelecionado)
 
             val nextIntent = Intent(this, ResumoActivity::class.java).apply {
@@ -104,7 +98,6 @@ class PreferenciasActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.d(TAG, "onResume: Activity Interativa")
-        // Load data to ensure fields are up-to-date
         carregarDadosSalvos()
     }
 
@@ -113,7 +106,6 @@ class PreferenciasActivity : AppCompatActivity() {
         Log.d(TAG, "onPause: Activity Pausada")
         val newsletterAtual = switchNewsletter.isChecked
         val temaAtual = spinnerTema.selectedItem.toString()
-        // Save data to prevent loss if the activity is interrupted
         salvarDadosTemporarios(newsletterAtual, temaAtual)
     }
 
@@ -132,9 +124,7 @@ class PreferenciasActivity : AppCompatActivity() {
         Log.d(TAG, "onDestroy: Activity Destruída")
     }
 
-    /**
-     * Loads saved preference data from SharedPreferences and updates the UI.
-     */
+
     private fun carregarDadosSalvos() {
         // Load all data from SharedPreferences in case the activity was started out of the typical flow
         if (nomeCompleto == null) nomeCompleto = sharedPreferences.getString(KEY_NOME, null)
@@ -154,11 +144,6 @@ class PreferenciasActivity : AppCompatActivity() {
         Log.d(TAG, "Dados carregados SharedPreferences: Newsletter=$newsletterSalva, Tema=$temaSalvo")
     }
 
-    /**
-     * Saves the current preferences to SharedPreferences.
-     * @param newsletter Boolean indicating if the user wants to receive newsletters.
-     * @param tema The selected theme string.
-     */
     private fun salvarDadosTemporarios(newsletter: Boolean, tema: String) {
         val editor = sharedPreferences.edit()
         editor.putBoolean(KEY_NEWSLETTER, newsletter)

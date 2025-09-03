@@ -43,7 +43,6 @@ class ResumoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_resumo)
         Log.d(TAG, "onCreate: Activity Criada")
 
-        // Inicializar Views
         textViewValorNomeCompleto = findViewById(R.id.textViewValorNomeCompleto)
         textViewValorEmail = findViewById(R.id.textViewValorEmail)
         textViewValorRua = findViewById(R.id.textViewValorRua)
@@ -53,7 +52,6 @@ class ResumoActivity : AppCompatActivity() {
         buttonEditarPerfil = findViewById(R.id.buttonEditarPerfil)
         buttonFinalizarResumo = findViewById(R.id.buttonFinalizarResumo)
 
-        // Receber dados da PreferenciasActivity
         nomeCompleto = intent.getStringExtra(KEY_NOME) // Usar as constantes KEY_ aqui também é uma boa prática
         email = intent.getStringExtra(KEY_EMAIL)
         rua = intent.getStringExtra(KEY_RUA)
@@ -61,7 +59,6 @@ class ResumoActivity : AppCompatActivity() {
         recebeNewsletter = intent.getBooleanExtra(KEY_NEWSLETTER, false)
         temaApp = intent.getStringExtra(KEY_TEMA)
 
-        // Log para verificar os dados recebidos ANTES de exibi-los
         Log.d(TAG, "DADOS RECEBIDOS NA RESUMO (do Intent):")
         Log.d(TAG, "Nome: $nomeCompleto")
         Log.d(TAG, "Email: $email")
@@ -70,7 +67,6 @@ class ResumoActivity : AppCompatActivity() {
         Log.d(TAG, "Newsletter: $recebeNewsletter")
         Log.d(TAG, "Tema: $temaApp")
 
-        // Exibir dados recebidos SOMENTE DEPOIS de carregá-los
         exibirDados()
 
         buttonEditarPerfil.setOnClickListener {
